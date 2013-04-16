@@ -1,16 +1,12 @@
 var Entries = function () {
-  this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
+  this.respondsWith = ['json', 'xml', 'js', 'txt'];
 
   this.index = function (req, resp, params) {
     var self = this;
 
     geddy.model.Entry.all(function(err, entries) {
-      self.respond({params: params, entries: entries});
+      self.respond(entries);
     });
-  };
-
-  this.add = function (req, resp, params) {
-    this.respond({params: params});
   };
 
   this.create = function (req, resp, params) {
@@ -18,16 +14,14 @@ var Entries = function () {
       , entry = geddy.model.Entry.create(params);
 
     if (!entry.isValid()) {
-      params.errors = entry.errors;
-      self.transfer('add');
+      self.respond({ status: 0, error: entry.errors });
     }
 
     entry.save(function(err, data) {
       if (err) {
-        params.errors = err;
-        self.transfer('add');
+        self.respond({ status: 0, error: err });
       } else {
-        self.redirect({controller: self.name});
+        self.respond(entry);
       }
     });
   };
@@ -39,23 +33,9 @@ var Entries = function () {
       if (!entry) {
         var err = new Error();
         err.statusCode = 404;
-        self.error(err);
+        self.respond({ status: 0, error: err });
       } else {
-        self.respond({params: params, entry: entry.toObj()});
-      }
-    });
-  };
-
-  this.edit = function (req, resp, params) {
-    var self = this;
-
-    geddy.model.Entry.first(params.id, function(err, entry) {
-      if (!entry) {
-        var err = new Error();
-        err.statusCode = 400;
-        self.error(err);
-      } else {
-        self.respond({params: params, entry: entry});
+        self.respond(entry);
       }
     });
   };
@@ -66,16 +46,14 @@ var Entries = function () {
     geddy.model.Entry.first(params.id, function(err, entry) {
       entry.updateProperties(params);
       if (!entry.isValid()) {
-        params.errors = entry.errors;
-        self.transfer('edit');
+        self.respond({ status: 0, error: entry.errors });
       }
 
       entry.save(function(err, data) {
         if (err) {
-          params.errors = err;
-          self.transfer('edit');
+          self.respond({ status: 0, error: err });
         } else {
-          self.redirect({controller: self.name});
+          self.respond(entry);
         }
       });
     });
@@ -86,10 +64,9 @@ var Entries = function () {
 
     geddy.model.Entry.remove(params.id, function(err) {
       if (err) {
-        params.errors = err;
-        self.transfer('edit');
+        self.respond({ status: 0, error: err });
       } else {
-        self.redirect({controller: self.name});
+        self.respond({ status: 1 });
       }
     });
   };
