@@ -37,6 +37,17 @@
     <div class="container">
       <%- yield(); %>
     </div>
+
+    <!-- templates -->
+    <script type="text/x-handlebars-template" id="entry-tpl">
+      <li><a href="#/entry/{{id}}" data-id="{{id}}" class="entry-item-link">{{title}}</a></li>
+    </script>
+
+    <script type="text/x-handlebars-template" id="entry-detail-tpl">
+      <h3>{{title}}</h3>
+      <p>Created: <small>{{createdAt}}</small></p>
+    </script>
+
     <%- scriptLink('/js/jquery.min.js', {type:'text/javascript'}) %>
     <%- scriptLink('/js/bootstrap.min.js', {type:'text/javascript'}) %>
     <%- scriptLink('/js/config/init.js', {type: 'text/javascript'}) %>
@@ -45,5 +56,8 @@
     <%- scriptLink('/js/vendor/spine/route.js', {type: 'text/javascript'}) %>
     <%- scriptLink('/js/vendor/spine/manager.js', {type: 'text/javascript'}) %>
     <%- scriptLink('/js/vendor/spine/ajax.js', {type: 'text/javascript'}) %>
+    <%- scriptLink('/js/vendor/handlebars.js', {type: 'text/javascript'}) %>
+    
+    <%- scriptLink('/js/app.js', {type: 'text/javascript'}) %>
   </body>
 </html>
