@@ -7,3 +7,17 @@ body {
   box-shadow: 0px 0px 3px #000;
   border-bottom: 1px solid #999;
 }
+
+#entry-detail .no-result{
+  display: none;
+}
+#entry-detail .result{
+  display: block;
+}
+
+#entry-detail.is-empty .no-result{
+  display: block;
+}
+#entry-detail.is-empty .result{
+  display: none;
+}
