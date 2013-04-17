@@ -43,9 +43,19 @@
       <li><a href="#/entry/{{id}}" data-id="{{id}}" class="entry-item-link">{{title}}</a></li>
     </script>
 
-    <script type="text/x-handlebars-template" id="entry-detail-tpl">
-      <h3>{{title}}</h3>
-      <p>Created: <small>{{createdAt}}</small></p>
+    <script type="text/x-handlebars-template" id="credit-list-tpl">
+      <tr>
+        <td>{{title}}</td>
+        <td>{{value}}</td>
+        <td><a href="#/delete/credit/{{id}}" class="btn btn-danger">Delete</a></td>
+      </tr>
+    </script>
+
+    <script type="text/x-handlebars-template" id="alert-error-tpl">
+      <div class="alert alert-error">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{message}}
+      </div>
     </script>
 
     <%- scriptLink('/js/jquery.min.js', {type:'text/javascript'}) %>
