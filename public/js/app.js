@@ -1,10 +1,23 @@
 (function(Spine, $, exports){
+  var alert_error = Handlebars.compile($('#alert-error-tpl').html());
+
   var Credit = Spine.Model.sub();
   Credit.configure("Credit", "title", "entryid", "value")
-    .extend(Spine.Model.Ajax)
-    .extend({
-      url: "/credits"
-    });
+  Credit.extend(Spine.Model.Ajax)
+  Credit.extend({
+    url: "/credits",
+  });
+  Credit.include({
+    validate: function(){
+      if( !this.title ){
+        return "Credit title/description is required";
+      }
+
+      if( !this.value || isNaN(this.value)){
+        return "Invalid amount/value";
+      }
+    }
+  });
 
   var Entry = Spine.Model.sub();
   Entry.configure("Entry", "title")
@@ -134,9 +147,13 @@
       e.preventDefault();
       
       var credit = Credit.fromForm(e.target);
-      credit.save();
-
-      this.$('input[type=text]').val('');
+      if(!credit.save()){
+        var msg = credit.validate();
+        
+        entry_detail.el.prepend(alert_error({ message: msg }));
+      } else {
+        this.$('input[type=text]').val('');
+      }
     }
   });
 
