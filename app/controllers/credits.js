@@ -1,33 +1,27 @@
 var Credits = function () {
-  this.respondsWith = ['html', 'json', 'xml', 'js', 'txt'];
+  this.respondsWith = ['json'];
 
   this.index = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Credit.all(function(err, credits) {
-      self.respond({params: params, credits: credits});
+    geddy.model.Credit.all(function(err, credits){
+      self.respond(credits);
     });
-  };
-
-  this.add = function (req, resp, params) {
-    this.respond({params: params});
   };
 
   this.create = function (req, resp, params) {
     var self = this
-      , credit = geddy.model.Credit.create(params);
+    , credit= geddy.model.Credit.create(params);
 
-    if (!credit.isValid()) {
-      params.errors = credit.errors;
-      self.transfer('add');
+    if(!credit.isValid()){
+      self.respond({ status: 0, error: credit.errors });
     }
 
-    credit.save(function(err, data) {
+    credit.save(function(err, data){
       if (err) {
-        params.errors = err;
-        self.transfer('add');
+        self.respond({ status: 0, error: err });
       } else {
-        self.redirect({controller: self.name});
+        self.respond(credit);
       }
     });
   };
@@ -35,27 +29,13 @@ var Credits = function () {
   this.show = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Credit.first(params.id, function(err, credit) {
-      if (!credit) {
+    geddy.model.Credit.first(params.id, function(err, credit){
+      if(!credit) {
         var err = new Error();
         err.statusCode = 404;
-        self.error(err);
+        self.respond({ status: 0, error: err });
       } else {
-        self.respond({params: params, credit: credit.toObj()});
-      }
-    });
-  };
-
-  this.edit = function (req, resp, params) {
-    var self = this;
-
-    geddy.model.Credit.first(params.id, function(err, credit) {
-      if (!credit) {
-        var err = new Error();
-        err.statusCode = 400;
-        self.error(err);
-      } else {
-        self.respond({params: params, credit: credit});
+        self.respond(credit);
       }
     });
   };
@@ -63,19 +43,18 @@ var Credits = function () {
   this.update = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Credit.first(params.id, function(err, credit) {
+    geddy.model.Credit.first(params.id, function(err, credit){
       credit.updateProperties(params);
-      if (!credit.isValid()) {
-        params.errors = credit.errors;
-        self.transfer('edit');
+
+      if(!credit.isValid()){
+        self.respond({ status: 0, error: credit.errors });
       }
 
-      credit.save(function(err, data) {
+      credit.save(function(err, data){
         if (err) {
-          params.errors = err;
-          self.transfer('edit');
+          self.respond({ status: 0, error: err });
         } else {
-          self.redirect({controller: self.name});
+          self.respond(credit);
         }
       });
     });
@@ -84,12 +63,11 @@ var Credits = function () {
   this.destroy = function (req, resp, params) {
     var self = this;
 
-    geddy.model.Credit.remove(params.id, function(err) {
+    geddy.model.Credit.remove(params.id, function(err){
       if (err) {
-        params.errors = err;
-        self.transfer('edit');
+        self.respond({ status: 0, error: err });
       } else {
-        self.redirect({controller: self.name});
+        self.respond({ status: 1 });
       }
     });
   };
@@ -97,3 +75,4 @@ var Credits = function () {
 };
 
 exports.Credits = Credits;
+
