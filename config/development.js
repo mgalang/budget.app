@@ -14,20 +14,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
-*/
+ */
 
 var config = {
   detailedErrors: true
-, debug: true
-, hostname: null
-, port: 4000
-, model: {
-    defaultAdapter: 'memory'
+  , debug: true
+  , hostname: null
+  , port: 4000
+  , model: {
+    defaultAdapter: 'mongo'
   }
-, sessions: {
+  , db: {
+    mongo: {
+      username: null
+      , dbname: 'budgetjs'
+      , prefix: null
+      , password: null
+      , host: 'localhost'
+      , port: 27017
+    }
+  }
+  , sessions: {
     store: 'memory'
-  , key: 'sid'
-  , expiry: 14 * 24 * 60 * 60
+    , key: 'sid'
+    , expiry: 14 * 24 * 60 * 60
   }
 };
 
