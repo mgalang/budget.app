@@ -11,33 +11,42 @@
       <div id="entry-detail">
         <div class="no-result">No Budget Selected</div>
         <div class="result">
+
           <h3 class="title"></h3>
-          <table class="table table-hover table-bordered" id="credits-list">
-            <thead>
-              <tr>
-                <th>Description</th>
-                <th>Amount</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody class="items">
-              
-            </tbody>
-            <tfoot>
-              <tr>
-                <td><strong>Total:</strong></td>
-                <td class="total"></td>
-                <td></td>
-              </tr>
-            </tfoot>
-          </table>
-          <form class="form-inline" id="credit-form">
-            <input type="text" name="title" placeholder="Description" />
-            <input type="text" name="value" placeholder="Amount" />
-            <input type="hidden" name="entryid" id="entryid" value="" />
-            <button type="submit" class="btn">Add Credit</button>
-          </form>
-          <a href="#" class="btn btn-danger delete">Delete</a>
+          <div class="row-fluid">
+            <div class="span5">
+              <h5>Credit</h5>
+              <table class="table table-hover table-bordered" id="credits-list">
+                <thead>
+                  <tr>
+                    <th>Description</th>
+                    <th>Amount</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody class="items">
+
+                </tbody>
+                <tfoot>
+                  <tr>
+                    <td><strong>Total:</strong></td>
+                    <td class="total"></td>
+                    <td></td>
+                  </tr>
+                </tfoot>
+              </table>
+              <form class="form-inline" id="credit-form">
+                <input class="span6" type="text" name="title" placeholder="Description" />
+                <input class="span3" type="text" name="value" placeholder="Amount" />
+                <input type="hidden" name="entryid" id="entryid" value="" />
+                <button type="submit" class="btn">Add Credit</button>
+              </form>
+            </div><!-- /span5 -->
+            <div class="span5">
+              <h5>Debit</h5>
+            </div><!-- /span -->
+          </div>
+          <a href="#" class="btn btn-danger delete">Delete Budget</a>
         </div>
       </div>
     </div>
