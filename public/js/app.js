@@ -48,11 +48,13 @@
  
   var Credits = Spine.Controller.sub({
     el: $('#credits-list'),
+    total: 0,
     init: function(){
       Credit.bind('update', this.proxy(this.get));
       this.get();
     },
     get: function(){
+      this.total = 0;
       this.$('tbody').empty();
       var _credits = Credit.select(this.proxy(function(credit){
         return credit.entryid === this.id;
@@ -60,11 +62,16 @@
 
       for(var i in _credits){
         this.add(_credits[i]);
+        this.total += _credits[i].value;
       }
+      this._total();
     },
     add: function(credit){
       var item = new CreditItem({ credit: credit });
       this.$('tbody').append(item.render().el);
+    },
+    _total: function(){
+      this.$('.total').html(this.total.toFixed(2));
     }
   });
 
