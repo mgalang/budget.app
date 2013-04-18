@@ -48,30 +48,34 @@
  
   var Credits = Spine.Controller.sub({
     el: $('#credits-list'),
-    total: 0,
     init: function(){
       Credit.bind('update', this.proxy(this.get));
+      Credit.bind('destroy', this.proxy(this.update_total));
       this.get();
     },
     get: function(){
-      this.total = 0;
       this.$('tbody').empty();
-      var _credits = Credit.select(this.proxy(function(credit){
-        return credit.entryid === this.id;
+      Credit.select(this.proxy(function(credit){
+        if(credit.entryid === this.id){
+          this.add(credit);
+        }
       }));
 
-      for(var i in _credits){
-        this.add(_credits[i]);
-        this.total += _credits[i].value;
-      }
-      this._total();
+      this.update_total();
     },
     add: function(credit){
       var item = new CreditItem({ credit: credit });
       this.$('tbody').append(item.render().el);
     },
-    _total: function(){
-      this.$('.total').html(this.total.toFixed(2));
+    update_total: function(){
+      var _total = 0;
+      Credit.select(this.proxy(function(credit){
+        if(credit.entryid === this.id){
+          _total+= parseFloat(credit.value);
+        }
+      }));
+
+      this.$('.total').html(_total.toFixed(2));
     }
   });
 
