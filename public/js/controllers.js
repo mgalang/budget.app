@@ -51,6 +51,96 @@
     }
   });
 
+  var CreditForm = Spine.Controller.sub({
+    el: $('#credit-form'),
+    init: function(){
+      this.el.bind('submit', this.proxy(this.submit));
+    },
+    submit: function(e){
+      e.preventDefault();
+      
+      var credit = Credit.fromForm(e.target);
+      if(!credit.save()){
+        var msg = credit.validate();
+        
+        alert(msg);
+      } else {
+        this.$('input[type=text]').val('');
+      }
+    }
+  });
+
+  var DebitItem = Spine.Controller.sub({
+    init: function(){
+      this.debit.bind('update', this.proxy(this.render));
+      this.debit.bind('destroy', this.proxy(this.remove));
+    },
+    render: function(){
+      var template = this.template();
+      this.replace(template(this.debit));
+      return this;
+    },
+    template: function(){
+      return Handlebars.compile($('#debit-list-tpl').html());
+    },
+    remove: function(){
+      this.el.remove();
+      this.release();
+    }
+  });
+ 
+  var Debits = Spine.Controller.sub({
+    el: $('#debits-list'),
+    init: function(){
+      Debit.bind('update', this.proxy(this.get));
+      Debit.bind('destroy', this.proxy(this.update_total));
+      this.get();
+    },
+    get: function(){
+      this.$('tbody').empty();
+      Debit.select(this.proxy(function(debit){
+        if(debit.entryid === this.id){
+          this.add(debit);
+        }
+      }));
+
+      this.update_total();
+    },
+    add: function(debit){
+      var item = new DebitItem({ debit: debit });
+      this.$('tbody').append(item.render().el);
+    },
+    update_total: function(){
+      var _total = 0;
+      Debit.select(this.proxy(function(debit){
+        if(debit.entryid === this.id){
+          _total+= parseFloat(debit.value);
+        }
+      }));
+
+      this.$('.total').html(_total.toFixed(2));
+    }
+  });
+
+  var DebitForm = Spine.Controller.sub({
+    el: $('#debit-form'),
+    init: function(){
+      this.el.bind('submit', this.proxy(this.submit));
+    },
+    submit: function(e){
+      e.preventDefault();
+      
+      var debit = Debit.fromForm(e.target);
+      if(!debit.save()){
+        var msg = debit.validate();
+        
+        alert(msg);
+      } else {
+        this.$('input[type=text]').val('');
+      }
+    }
+  });
+
   var EntryItem = Spine.Controller.sub({
     init: function(){
       this.entry.bind('update', this.proxy(this.render));
@@ -100,7 +190,7 @@
     elements: {
       '.title': 'title',
       '.delete': 'delete_button',
-      '#entryid': 'entryid'
+      '.entryid': 'entryid'
     },
     init: function(){
       this.el.addClass('is-empty');
@@ -115,32 +205,16 @@
         this.delete_button.attr('href', '#/delete/'+entry.id);
 
         new Credits({ id: entry.id });
+        new Debits({ id: entry.id });
       } else {
         this.init();
       }
     }
   });
 
-  var CreditForm = Spine.Controller.sub({
-    el: $('#credit-form'),
-    init: function(){
-      this.el.bind('submit', this.proxy(this.submit));
-    },
-    submit: function(e){
-      e.preventDefault();
-      
-      var credit = Credit.fromForm(e.target);
-      if(!credit.save()){
-        var msg = credit.validate();
-        
-        entry_detail.el.prepend(alert_error({ message: msg }));
-      } else {
-        this.$('input[type=text]').val('');
-      }
-    }
-  });
   
   exports.Entries = Entries;
   exports.EntryDetail = EntryDetail;
   exports.CreditForm = CreditForm;
+  exports.DebitForm= DebitForm;;
 })(Spine, Spine.$, window);

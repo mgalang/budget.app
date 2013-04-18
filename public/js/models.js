@@ -18,6 +18,25 @@
     }
   });
 
+  // Debit Model
+  var Debit = Spine.Model.sub();
+  Debit.configure("Debit", "title", "entryid", "value")
+  Debit.extend(Spine.Model.Ajax)
+  Debit.extend({
+    url: "/debits",
+  });
+
+  Debit.include({
+    validate: function(){
+      if( !this.title ){
+        return "Debit title/description is required";
+      }
+      if( !this.value || isNaN(this.value)){
+        return "Invalid amount/value";
+      }
+    }
+  });
+
   // Budget Entry Model
   var Entry = Spine.Model.sub();
   Entry.configure("Entry", "title")
@@ -27,5 +46,6 @@
     });
 
   exports.Credit = Credit;
+  exports.Debit = Debit;
   exports.Entry = Entry;
 })(Spine, Spine.$, window);

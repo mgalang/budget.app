@@ -4,6 +4,7 @@
   var entries = new Entries();
   var entry_detail = new EntryDetail();
   var credit_form = new CreditForm();
+  var debit_form= new DebitForm();
 
   var App = Spine.Controller.sub({
     el: $('#app'),
@@ -18,11 +19,15 @@
         },
         "/delete/credit/:id": function(params){
           Credit.destroy(params.id);
+        },
+        "/delete/debit/:id": function(params){
+          Debit.destroy(params.id);
         }
       });
 
       Entry.fetch();
       Credit.fetch();
+      Debit.fetch();
     }
   });
 

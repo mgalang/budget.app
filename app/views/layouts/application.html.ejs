@@ -51,6 +51,14 @@
       </tr>
     </script>
 
+    <script type="text/x-handlebars-template" id="debit-list-tpl">
+      <tr>
+        <td>{{title}}</td>
+        <td>{{value}}</td>
+        <td><a href="#/delete/debit/{{id}}" class="btn btn-danger">Delete</a></td>
+      </tr>
+    </script>
+
     <script type="text/x-handlebars-template" id="alert-error-tpl">
       <div class="alert alert-error">
         <button type="button" class="close" data-dismiss="alert">&times;</button>
