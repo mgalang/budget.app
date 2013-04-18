@@ -21,6 +21,7 @@
   var Credits = Spine.Controller.sub({
     el: $('#credits-list'),
     init: function(){
+      this.total = 0;
       Credit.bind('update', this.proxy(this.get));
       Credit.bind('destroy', this.proxy(this.update_total));
       this.get();
@@ -40,14 +41,14 @@
       this.$('tbody').append(item.render().el);
     },
     update_total: function(){
-      var _total = 0;
+      this.total = 0;
       Credit.select(this.proxy(function(credit){
         if(credit.entryid === this.id){
-          _total+= parseFloat(credit.value);
+          this.total+= parseFloat(credit.value);
         }
       }));
 
-      this.$('.total').html(_total.toFixed(2));
+      this.$('.total').html(this.total.toFixed(2));
     }
   });
 
@@ -92,6 +93,7 @@
   var Debits = Spine.Controller.sub({
     el: $('#debits-list'),
     init: function(){
+      this.total = 0;
       Debit.bind('update', this.proxy(this.get));
       Debit.bind('destroy', this.proxy(this.update_total));
       this.get();
@@ -111,14 +113,14 @@
       this.$('tbody').append(item.render().el);
     },
     update_total: function(){
-      var _total = 0;
+      this.total = 0;
       Debit.select(this.proxy(function(debit){
         if(debit.entryid === this.id){
-          _total+= parseFloat(debit.value);
+          this.total+= parseFloat(debit.value);
         }
       }));
 
-      this.$('.total').html(_total.toFixed(2));
+      this.$('.total').html(this.total.toFixed(2));
     }
   });
 
@@ -194,6 +196,8 @@
     },
     init: function(){
       this.el.addClass('is-empty');
+      Credit.bind('create update destroy', this.proxy(this.update_balance));
+      Debit.bind('create update destroy', this.proxy(this.update_balance));
     },
     show: function(id){
       this.el.removeClass('is-empty');
@@ -204,11 +208,15 @@
         this.title.html(entry.title);
         this.delete_button.attr('href', '#/delete/'+entry.id);
 
-        new Credits({ id: entry.id });
-        new Debits({ id: entry.id });
+        this.credits = new Credits({ id: entry.id });
+        this.debits = new Debits({ id: entry.id });
+        this.update_balance();
       } else {
         this.init();
       }
+    },
+    update_balance: function(){
+      this.$('.balance-value').html(this.credits.total - this.debits.total);
     }
   });
 
