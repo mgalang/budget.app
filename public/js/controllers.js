@@ -189,6 +189,7 @@
 
   var EntryDetail = Spine.Controller.sub({
     el: $('#entry-detail'),
+    current_id: 0,
     elements: {
       '.title': 'title',
       '.delete': 'delete_button',
@@ -196,27 +197,42 @@
     },
     init: function(){
       this.el.addClass('is-empty');
-      Credit.bind('create update destroy', this.proxy(this.update_balance));
-      Debit.bind('create update destroy', this.proxy(this.update_balance));
+      Credit.bind('create destroy', this.proxy(this.update_balance));
+      Debit.bind('create destroy', this.proxy(this.update_balance));
     },
     show: function(id){
       this.el.removeClass('is-empty');
       if(Entry.exists(id)){
+        this.current_id = id;
         var entry = Entry.find(id);
 
         this.entryid.val(id);
         this.title.html(entry.title);
         this.delete_button.attr('href', '#/delete/'+entry.id);
 
-        this.credits = new Credits({ id: entry.id });
-        this.debits = new Debits({ id: entry.id });
+        new Credits({ id: entry.id });
+        new Debits({ id: entry.id });
         this.update_balance();
       } else {
         this.init();
       }
     },
     update_balance: function(){
-      this.$('.balance-value').html(this.credits.total - this.debits.total);
+      var credits= 0;
+      Credit.select(this.proxy(function(credit){
+        if(credit.entryid === this.current_id){
+          credits+= parseFloat(credit.value);
+        }
+      }));
+
+      var debits= 0;
+      Debit.select(this.proxy(function(debit){
+        if(debit.entryid === this.current_id){
+          debits+= parseFloat(debit.value);
+        }
+      }));
+
+      this.$('.balance-value').html(credits - debits);
     }
   });
 
