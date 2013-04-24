@@ -22,9 +22,9 @@
     el: $('#credits-list'),
     init: function(){
       this.total = 0;
-      Credit.bind('update', this.proxy(this.get));
+      Credit.bind('create', this.proxy(this.get));
       Credit.bind('destroy', this.proxy(this.update_total));
-      this.get();
+      Credit.bind('update', this.proxy(this.update_total));
     },
     get: function(){
       this.$('tbody').empty();
@@ -49,6 +49,7 @@
       }));
 
       this.$('.total').html(this.total.toFixed(2));
+      this.trigger('updatetotal');
     }
   });
 
@@ -74,7 +75,7 @@
   var DebitItem = Spine.Controller.sub({
     init: function(){
       this.debit.bind('update', this.proxy(this.render));
-      this.debit.bind('destroy', this.proxy(this.remove));
+      this.debit.bind('destroy update', this.proxy(this.remove));
     },
     render: function(){
       var template = this.template();
@@ -94,9 +95,8 @@
     el: $('#debits-list'),
     init: function(){
       this.total = 0;
-      Debit.bind('update', this.proxy(this.get));
-      Debit.bind('destroy', this.proxy(this.update_total));
-      this.get();
+      Debit.bind('create', this.proxy(this.get));
+      Debit.bind('destroy update', this.proxy(this.update_total));
     },
     get: function(){
       this.$('tbody').empty();
@@ -121,6 +121,7 @@
       }));
 
       this.$('.total').html(this.total.toFixed(2));
+      this.trigger('updatetotal');
     }
   });
 
@@ -197,8 +198,8 @@
     },
     init: function(){
       this.el.addClass('is-empty');
-      Credit.bind('create destroy', this.proxy(this.update_balance));
-      Debit.bind('create destroy', this.proxy(this.update_balance));
+      credits.bind('updatetotal', this.proxy(this.update_balance));
+      debits.bind('updatetotal', this.proxy(this.update_balance));
     },
     show: function(id){
       this.el.removeClass('is-empty');
@@ -209,34 +210,24 @@
         this.entryid.val(id);
         this.title.html(entry.title);
         this.delete_button.attr('href', '#/delete/'+entry.id);
+       
+        credits.id = entry.id;
+        debits.id = entry.id;
 
-        new Credits({ id: entry.id });
-        new Debits({ id: entry.id });
-        this.update_balance();
+        credits.get();
+        debits.get();  
       } else {
         this.init();
       }
     },
-    update_balance: function(){
-      var credits= 0;
-      Credit.select(this.proxy(function(credit){
-        if(credit.entryid === this.current_id){
-          credits+= parseFloat(credit.value);
-        }
-      }));
-
-      var debits= 0;
-      Debit.select(this.proxy(function(debit){
-        if(debit.entryid === this.current_id){
-          debits+= parseFloat(debit.value);
-        }
-      }));
-
-      this.$('.balance-value').html(credits - debits);
+    update_balance: function(e){
+      this.$('.balance-value').html(credits.total - debits.total);
     }
   });
 
-  
+  var credits = new Credits();
+  var debits = new Debits();
+
   exports.Entries = Entries;
   exports.EntryDetail = EntryDetail;
   exports.CreditForm = CreditForm;
