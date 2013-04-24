@@ -72,7 +72,7 @@
   var DebitItem = Spine.Controller.sub({
     init: function(){
       this.debit.bind('update', this.proxy(this.render));
-      this.debit.bind('destroy update', this.proxy(this.remove));
+      this.debit.bind('destroy', this.proxy(this.remove));
       this.template = Handlebars.compile($('#debit-list-tpl').html());
     },
     render: function(){
@@ -220,11 +220,42 @@
     }
   });
 
+  var EditModal = Spine.Controller.sub({
+    el: $('#edit-modal'),
+    events: {
+      'submit #editForm': 'submit'
+    },
+    form: function(obj, type){
+      this.$('input[name=title]').val(obj.title);
+      this.$('input[name=value]').val(obj.value);
+      this.$('#id').val(obj.id);
+      this.$('#type').val(type);
+      $(this.el).modal('show');
+    },
+    submit: function(e){
+      e.preventDefault();
+
+      if($('#type', e.target).val() === 'credit'){
+        var model = Credit;
+      } else {
+        var model = Debit;
+      }
+
+      var _item = model.find($('#id', e.target).val());
+      _item.title = $('input[name=title]', e.target).val();
+      _item.value= $('input[name=value]', e.target).val();
+      _item.save();
+
+      $(this.el).modal('hide');
+    }
+  });
+
   var credits = new Credits();
   var debits = new Debits();
 
   exports.Entries = Entries;
   exports.EntryDetail = EntryDetail;
   exports.CreditForm = CreditForm;
-  exports.DebitForm= DebitForm;;
+  exports.DebitForm= DebitForm;
+  exports.EditModal = EditModal;
 })(Spine, Spine.$, window);

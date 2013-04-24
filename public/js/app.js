@@ -5,6 +5,7 @@
   var entry_detail = new EntryDetail();
   var credit_form = new CreditForm();
   var debit_form= new DebitForm();
+  var edit_modal = new EditModal();
 
   var App = Spine.Controller.sub({
     el: $('#app'),
@@ -12,6 +13,15 @@
       this.routes({
         "/entry/:id": function(params){
           entry_detail.show(params.id);
+        },
+        "/edit/:type/:id": function(params){
+          if(params.type === 'credit'){
+            var obj = Credit.find(params.id);
+          } else {
+            var obj = Debit.find(params.id);
+          }
+
+          edit_modal.form(obj, params.type);
         },
         "/delete/:id": function(params){
           Entry.destroy(params.id);
