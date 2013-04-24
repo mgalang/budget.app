@@ -15,6 +15,16 @@
         },
         "/delete/:id": function(params){
           Entry.destroy(params.id);
+          Debit.select(function(debit){
+            if(debit.entryid === params.id){
+              debit.destroy();
+            }
+          });
+          Credit.select(function(credit){
+            if(credit.entryid === params.id){
+              credit.destroy();
+            }
+          });
           entry_detail.init();
         },
         "/delete/credit/:id": function(params){
