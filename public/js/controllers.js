@@ -3,14 +3,11 @@
     init: function(){
       this.credit.bind('update', this.proxy(this.render));
       this.credit.bind('destroy', this.proxy(this.remove));
+      this.template = Handlebars.compile($('#credit-list-tpl').html());
     },
     render: function(){
-      var template = this.template();
-      this.replace(template(this.credit));
+      this.replace(this.template(this.credit));
       return this;
-    },
-    template: function(){
-      return Handlebars.compile($('#credit-list-tpl').html());
     },
     remove: function(){
       this.el.remove();
@@ -76,14 +73,11 @@
     init: function(){
       this.debit.bind('update', this.proxy(this.render));
       this.debit.bind('destroy update', this.proxy(this.remove));
+      this.template = Handlebars.compile($('#debit-list-tpl').html());
     },
     render: function(){
-      var template = this.template();
-      this.replace(template(this.debit));
+      this.replace(this.template(this.debit));
       return this;
-    },
-    template: function(){
-      return Handlebars.compile($('#debit-list-tpl').html());
     },
     remove: function(){
       this.el.remove();
@@ -148,10 +142,11 @@
     init: function(){
       this.entry.bind('update', this.proxy(this.render));
       this.entry.bind('destroy', this.proxy(this.remove));
+
+      this.template = Handlebars.compile($('#entry-tpl').html());
     },
     render: function(){
-      var _tpl = Handlebars.compile($('#entry-tpl').html());
-      this.replace(_tpl(this.entry));
+      this.replace(this.template(this.entry));
       return this;
     },
     remove: function(){
