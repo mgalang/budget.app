@@ -25,10 +25,9 @@
     },
     get: function(){
       this.$('tbody').empty();
-      Credit.select(this.proxy(function(credit){
-        if(credit.entryid === this.id){
-          this.add(credit);
-        }
+
+      this.entry.credits().select(this.proxy(function(credit){
+        this.add(credit);
       }));
 
       this.update_total();
@@ -39,10 +38,8 @@
     },
     update_total: function(){
       this.total = 0;
-      Credit.select(this.proxy(function(credit){
-        if(credit.entryid === this.id){
+      this.entry.credits().select(this.proxy(function(credit){
           this.total+= parseFloat(credit.value);
-        }
       }));
 
       this.$('.total').html(this.total.toFixed(2));
@@ -57,11 +54,14 @@
     },
     submit: function(e){
       e.preventDefault();
+      var credit = new Credit({
+        title: this.$('input[name=title]').val(),
+        value: this.$('input[name=value]').val(),
+        entry: Entry.find(this.$('.entryid').val())
+      });
       
-      var credit = Credit.fromForm(e.target);
       if(!credit.save()){
         var msg = credit.validate();
-        
         alert(msg);
       } else {
         this.$('input[type=text]').val('');
@@ -94,10 +94,8 @@
     },
     get: function(){
       this.$('tbody').empty();
-      Debit.select(this.proxy(function(debit){
-        if(debit.entryid === this.id){
+      this.entry.debits().select(this.proxy(function(debit){
           this.add(debit);
-        }
       }));
 
       this.update_total();
@@ -108,10 +106,8 @@
     },
     update_total: function(){
       this.total = 0;
-      Debit.select(this.proxy(function(debit){
-        if(debit.entryid === this.id){
+      this.entry.debits().select(this.proxy(function(debit){
           this.total+= parseFloat(debit.value);
-        }
       }));
 
       this.$('.total').html(this.total.toFixed(2));
@@ -127,7 +123,12 @@
     submit: function(e){
       e.preventDefault();
       
-      var debit = Debit.fromForm(e.target);
+      var debit = new Debit({
+        title: this.$('input[name=title]').val(),
+        value: this.$('input[name=value]').val(),
+        entry: Entry.find(this.$('.entryid').val())
+      });
+
       if(!debit.save()){
         var msg = debit.validate();
         
@@ -179,7 +180,8 @@
 
       var title = $('.title', e.target).val();
       $('.title', e.target).val('');
-      Entry.create({ title: title });
+      var entry = Entry.create({ title: title });
+      Spine.Route.navigate('/entry/'+entry.id);
     }
   });
 
@@ -206,8 +208,8 @@
         this.title.html(entry.title);
         this.delete_button.attr('href', '#/delete/'+entry.id);
        
-        credits.id = entry.id;
-        debits.id = entry.id;
+        credits.entry = entry;
+        debits.entry = entry;
 
         credits.get();
         debits.get();  
