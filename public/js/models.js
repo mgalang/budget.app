@@ -1,8 +1,9 @@
 (function(Spine, $, exports){
   // Credit Model
   var Credit = Spine.Model.sub();
-  Credit.configure("Credit", "title", "entryid", "value")
-  Credit.extend(Spine.Model.Ajax)
+  Credit.configure("Credit", "title", "value");
+  Credit.extend(Spine.Model.Ajax);
+  Credit.belongsTo('entry', 'Entry', 'entryid');
   Credit.extend({
     url: "/credits",
   });
@@ -20,8 +21,9 @@
 
   // Debit Model
   var Debit = Spine.Model.sub();
-  Debit.configure("Debit", "title", "entryid", "value")
-  Debit.extend(Spine.Model.Ajax)
+  Debit.configure("Debit", "title", "value");
+  Debit.extend(Spine.Model.Ajax);
+  Debit.belongsTo('entry', 'Entry', 'entryid');
   Debit.extend({
     url: "/debits",
   });
@@ -44,6 +46,8 @@
     .extend({
       url: "/entries"
     });
+  Entry.hasMany('debits', 'Debit', 'entryid');
+  Entry.hasMany('credits', 'Credit', 'entryid');
 
   exports.Credit = Credit;
   exports.Debit = Debit;
