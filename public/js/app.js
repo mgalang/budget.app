@@ -15,10 +15,11 @@
           entry_detail.show(params.id);
         },
         "/edit/:type/:id": function(params){
+          var obj = {};
           if(params.type === 'credit'){
-            var obj = Credit.find(params.id);
+            obj = Credit.find(params.id);
           } else {
-            var obj = Debit.find(params.id);
+            obj = Debit.find(params.id);
           }
 
           edit_modal.form(obj, params.type);

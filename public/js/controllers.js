@@ -247,11 +247,12 @@
     },
     submit: function(e){
       e.preventDefault();
+      var model = {};
 
       if($('#type', e.target).val() === 'credit'){
-        var model = Credit;
+        model = Credit;
       } else {
-        var model = Debit;
+        model = Debit;
       }
 
       var _item = model.find($('#id', e.target).val());

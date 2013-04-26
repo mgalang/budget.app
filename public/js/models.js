@@ -5,7 +5,7 @@
   Credit.extend(Spine.Model.Ajax);
   Credit.belongsTo('entry', 'Entry', 'entryid');
   Credit.extend({
-    url: "/credits",
+    url: "/credits"
   });
 
   Credit.include({
@@ -25,7 +25,7 @@
   Debit.extend(Spine.Model.Ajax);
   Debit.belongsTo('entry', 'Entry', 'entryid');
   Debit.extend({
-    url: "/debits",
+    url: "/debits"
   });
 
   Debit.include({
