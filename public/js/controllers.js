@@ -187,7 +187,6 @@
 
   var EntryDetail = Spine.Controller.sub({
     el: $('#entry-detail'),
-    current_id: 0,
     elements: {
       '.title': 'title',
       '.delete': 'delete_button',
@@ -197,19 +196,31 @@
       this.el.addClass('is-empty');
       credits.bind('updatetotal', this.proxy(this.update_balance));
       debits.bind('updatetotal', this.proxy(this.update_balance));
+
+      // update title after editing
+      this.$('.title').blur(this.proxy(this.change_title));
+      this.$('.title').keydown(function(e){
+        // prevent newline
+        if(e.keyCode == 13) {
+          $(this).blur();
+        }
+      });
+    },
+    change_title: function(e){
+      this.entry.title = $(e.target).html();
+      this.entry.save();
     },
     show: function(id){
       this.el.removeClass('is-empty');
       if(Entry.exists(id)){
-        this.current_id = id;
-        var entry = Entry.find(id);
+        this.entry = Entry.find(id);
 
         this.entryid.val(id);
-        this.title.html(entry.title);
-        this.delete_button.attr('href', '#/delete/'+entry.id);
+        this.title.html(this.entry.title);
+        this.delete_button.attr('href', '#/delete/'+this.entry.id);
        
-        credits.entry = entry;
-        debits.entry = entry;
+        credits.entry = this.entry;
+        debits.entry = this.entry;
 
         credits.get();
         debits.get();  

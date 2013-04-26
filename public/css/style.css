@@ -21,3 +21,11 @@ body {
 #entry-detail.is-empty .result{
   display: none;
 }
+
+:focus{
+  outline: none;
+}
+
+.title:hover{
+  cursor: text;
+}
