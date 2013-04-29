@@ -3,8 +3,8 @@
 
   var entries = new Entries();
   var entry_detail = new EntryDetail();
-  var credit_form = new CreditForm();
-  var debit_form= new DebitForm();
+  var income_form = new IncomeForm();
+  var expense_form= new ExpenseForm();
   var edit_modal = new EditModal();
 
   var App = Spine.Controller.sub({
@@ -16,39 +16,39 @@
         },
         "/edit/:type/:id": function(params){
           var obj = {};
-          if(params.type === 'credit'){
-            obj = Credit.find(params.id);
+          if(params.type === 'income'){
+            obj = Income.find(params.id);
           } else {
-            obj = Debit.find(params.id);
+            obj = Expense.find(params.id);
           }
 
           edit_modal.form(obj, params.type);
         },
         "/delete/:id": function(params){
           Entry.destroy(params.id);
-          Debit.select(function(debit){
-            if(debit.entryid === params.id){
-              debit.destroy();
+          Expense.select(function(expense){
+            if(expense.entryid === params.id){
+              expense.destroy();
             }
           });
-          Credit.select(function(credit){
-            if(credit.entryid === params.id){
-              credit.destroy();
+          Income.select(function(income){
+            if(income.entryid === params.id){
+              income.destroy();
             }
           });
           entry_detail.init();
         },
-        "/delete/credit/:id": function(params){
-          Credit.destroy(params.id);
+        "/delete/income/:id": function(params){
+          Income.destroy(params.id);
         },
-        "/delete/debit/:id": function(params){
-          Debit.destroy(params.id);
+        "/delete/expense/:id": function(params){
+          Expense.destroy(params.id);
         }
       });
 
       Entry.fetch();
-      Credit.fetch();
-      Debit.fetch();
+      Income.fetch();
+      Expense.fetch();
     }
   });
 

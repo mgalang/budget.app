@@ -1,12 +1,12 @@
 (function(Spine, $, exports){
-  var CreditItem = Spine.Controller.sub({
+  var IncomeItem = Spine.Controller.sub({
     init: function(){
-      this.credit.bind('update', this.proxy(this.render));
-      this.credit.bind('destroy', this.proxy(this.remove));
-      this.template = Handlebars.compile($('#credit-list-tpl').html());
+      this.income.bind('update', this.proxy(this.render));
+      this.income.bind('destroy', this.proxy(this.remove));
+      this.template = Handlebars.compile($('#income-list-tpl').html());
     },
     render: function(){
-      this.replace(this.template(this.credit));
+      this.replace(this.template(this.income));
       return this;
     },
     remove: function(){
@@ -15,31 +15,31 @@
     }
   });
  
-  var Credits = Spine.Controller.sub({
-    el: $('#credits-list'),
+  var Incomes = Spine.Controller.sub({
+    el: $('#incomes-list'),
     init: function(){
       this.total = 0;
-      Credit.bind('create', this.proxy(this.get));
-      Credit.bind('destroy', this.proxy(this.update_total));
-      Credit.bind('update', this.proxy(this.update_total));
+      Income.bind('create', this.proxy(this.get));
+      Income.bind('destroy', this.proxy(this.update_total));
+      Income.bind('update', this.proxy(this.update_total));
     },
     get: function(){
       this.$('tbody').empty();
 
-      this.entry.credits().select(this.proxy(function(credit){
-        this.add(credit);
+      this.entry.incomes().select(this.proxy(function(income){
+        this.add(income);
       }));
 
       this.update_total();
     },
-    add: function(credit){
-      var item = new CreditItem({ credit: credit });
+    add: function(income){
+      var item = new IncomeItem({ income: income });
       this.$('tbody').append(item.render().el);
     },
     update_total: function(){
       this.total = 0;
-      this.entry.credits().select(this.proxy(function(credit){
-          this.total+= parseFloat(credit.value);
+      this.entry.incomes().select(this.proxy(function(income){
+          this.total+= parseFloat(income.value);
       }));
 
       this.$('.total').html(this.total.toFixed(2));
@@ -47,21 +47,21 @@
     }
   });
 
-  var CreditForm = Spine.Controller.sub({
-    el: $('#credit-form'),
+  var IncomeForm = Spine.Controller.sub({
+    el: $('#income-form'),
     init: function(){
       this.el.bind('submit', this.proxy(this.submit));
     },
     submit: function(e){
       e.preventDefault();
-      var credit = new Credit({
+      var income = new Income({
         title: this.$('input[name=title]').val(),
         value: this.$('input[name=value]').val(),
         entry: Entry.find(this.$('.entryid').val())
       });
       
-      if(!credit.save()){
-        var msg = credit.validate();
+      if(!income.save()){
+        var msg = income.validate();
         alert(msg);
       } else {
         this.$('input[type=text]').val('');
@@ -69,14 +69,14 @@
     }
   });
 
-  var DebitItem = Spine.Controller.sub({
+  var ExpenseItem = Spine.Controller.sub({
     init: function(){
-      this.debit.bind('update', this.proxy(this.render));
-      this.debit.bind('destroy', this.proxy(this.remove));
-      this.template = Handlebars.compile($('#debit-list-tpl').html());
+      this.expense.bind('update', this.proxy(this.render));
+      this.expense.bind('destroy', this.proxy(this.remove));
+      this.template = Handlebars.compile($('#expense-list-tpl').html());
     },
     render: function(){
-      this.replace(this.template(this.debit));
+      this.replace(this.template(this.expense));
       return this;
     },
     remove: function(){
@@ -85,29 +85,29 @@
     }
   });
  
-  var Debits = Spine.Controller.sub({
-    el: $('#debits-list'),
+  var Expenses = Spine.Controller.sub({
+    el: $('#expenses-list'),
     init: function(){
       this.total = 0;
-      Debit.bind('create', this.proxy(this.get));
-      Debit.bind('destroy update', this.proxy(this.update_total));
+      Expense.bind('create', this.proxy(this.get));
+      Expense.bind('destroy update', this.proxy(this.update_total));
     },
     get: function(){
       this.$('tbody').empty();
-      this.entry.debits().select(this.proxy(function(debit){
-          this.add(debit);
+      this.entry.expenses().select(this.proxy(function(expense){
+          this.add(expense);
       }));
 
       this.update_total();
     },
-    add: function(debit){
-      var item = new DebitItem({ debit: debit });
+    add: function(expense){
+      var item = new ExpenseItem({ expense: expense });
       this.$('tbody').append(item.render().el);
     },
     update_total: function(){
       this.total = 0;
-      this.entry.debits().select(this.proxy(function(debit){
-          this.total+= parseFloat(debit.value);
+      this.entry.expenses().select(this.proxy(function(expense){
+          this.total+= parseFloat(expense.value);
       }));
 
       this.$('.total').html(this.total.toFixed(2));
@@ -115,22 +115,22 @@
     }
   });
 
-  var DebitForm = Spine.Controller.sub({
-    el: $('#debit-form'),
+  var ExpenseForm = Spine.Controller.sub({
+    el: $('#expense-form'),
     init: function(){
       this.el.bind('submit', this.proxy(this.submit));
     },
     submit: function(e){
       e.preventDefault();
       
-      var debit = new Debit({
+      var expense = new Expense({
         title: this.$('input[name=title]').val(),
         value: this.$('input[name=value]').val(),
         entry: Entry.find(this.$('.entryid').val())
       });
 
-      if(!debit.save()){
-        var msg = debit.validate();
+      if(!expense.save()){
+        var msg = expense.validate();
         
         alert(msg);
       } else {
@@ -194,8 +194,8 @@
     },
     init: function(){
       this.el.addClass('is-empty');
-      credits.bind('updatetotal', this.proxy(this.update_balance));
-      debits.bind('updatetotal', this.proxy(this.update_balance));
+      incomes.bind('updatetotal', this.proxy(this.update_balance));
+      expenses.bind('updatetotal', this.proxy(this.update_balance));
 
       // update title after editing
       this.$('.title').blur(this.proxy(this.change_title));
@@ -219,17 +219,17 @@
         this.title.html(this.entry.title);
         this.delete_button.attr('href', '#/delete/'+this.entry.id);
        
-        credits.entry = this.entry;
-        debits.entry = this.entry;
+        incomes.entry = this.entry;
+        expenses.entry = this.entry;
 
-        credits.get();
-        debits.get();  
+        incomes.get();
+        expenses.get();  
       } else {
         this.init();
       }
     },
     update_balance: function(e){
-      this.$('.balance-value').html(credits.total - debits.total);
+      this.$('.balance-value').html(incomes.total - expenses.total);
     }
   });
 
@@ -249,10 +249,10 @@
       e.preventDefault();
       var model = {};
 
-      if($('#type', e.target).val() === 'credit'){
-        model = Credit;
+      if($('#type', e.target).val() === 'income'){
+        model = Income;
       } else {
-        model = Debit;
+        model = Expense;
       }
 
       var _item = model.find($('#id', e.target).val());
@@ -264,12 +264,12 @@
     }
   });
 
-  var credits = new Credits();
-  var debits = new Debits();
+  var incomes = new Incomes();
+  var expenses = new Expenses();
 
   exports.Entries = Entries;
   exports.EntryDetail = EntryDetail;
-  exports.CreditForm = CreditForm;
-  exports.DebitForm= DebitForm;
+  exports.IncomeForm = IncomeForm;
+  exports.ExpenseForm= ExpenseForm;
   exports.EditModal = EditModal;
 })(Spine, Spine.$, window);

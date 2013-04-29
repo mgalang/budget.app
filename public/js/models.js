@@ -1,17 +1,17 @@
 (function(Spine, $, exports){
-  // Credit Model
-  var Credit = Spine.Model.sub();
-  Credit.configure("Credit", "title", "value");
-  Credit.extend(Spine.Model.Ajax);
-  Credit.belongsTo('entry', 'Entry', 'entryid');
-  Credit.extend({
-    url: "/credits"
+  // Income Model
+  var Income = Spine.Model.sub();
+  Income.configure("Income", "title", "value");
+  Income.extend(Spine.Model.Ajax);
+  Income.belongsTo('entry', 'Entry', 'entryid');
+  Income.extend({
+    url: "/incomes"
   });
 
-  Credit.include({
+  Income.include({
     validate: function(){
       if( !this.title ){
-        return "Credit title/description is required";
+        return "Income title/description is required";
       }
       if( !this.value || isNaN(this.value)){
         return "Invalid amount/value";
@@ -19,19 +19,19 @@
     }
   });
 
-  // Debit Model
-  var Debit = Spine.Model.sub();
-  Debit.configure("Debit", "title", "value");
-  Debit.extend(Spine.Model.Ajax);
-  Debit.belongsTo('entry', 'Entry', 'entryid');
-  Debit.extend({
-    url: "/debits"
+  // Expense Model
+  var Expense = Spine.Model.sub();
+  Expense.configure("Expense", "title", "value");
+  Expense.extend(Spine.Model.Ajax);
+  Expense.belongsTo('entry', 'Entry', 'entryid');
+  Expense.extend({
+    url: "/expenses"
   });
 
-  Debit.include({
+  Expense.include({
     validate: function(){
       if( !this.title ){
-        return "Debit title/description is required";
+        return "Expense title/description is required";
       }
       if( !this.value || isNaN(this.value)){
         return "Invalid amount/value";
@@ -46,10 +46,10 @@
     .extend({
       url: "/entries"
     });
-  Entry.hasMany('debits', 'Debit', 'entryid');
-  Entry.hasMany('credits', 'Credit', 'entryid');
+  Entry.hasMany('expenses', 'Expense', 'entryid');
+  Entry.hasMany('incomes', 'Income', 'entryid');
 
-  exports.Credit = Credit;
-  exports.Debit = Debit;
+  exports.Income = Income;
+  exports.Expense = Expense;
   exports.Entry = Entry;
 })(Spine, Spine.$, window);

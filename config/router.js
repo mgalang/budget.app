@@ -40,6 +40,6 @@ router.get('/').to('Main.index');
 // });
 
 router.resource('entries');
-router.resource('credits');
-router.resource('debits');
+router.resource('incomes');
+router.resource('expenses');
 exports.router = router;

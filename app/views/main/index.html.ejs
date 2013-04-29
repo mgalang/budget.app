@@ -15,8 +15,8 @@
           <h4>Balance: <span class="balance-value"></span></h4>
           <div class="row-fluid">
             <div class="span5">
-              <h5>Credit</h5>
-              <table class="table table-hover table-bordered" id="credits-list">
+              <h5>Incomes</h5>
+              <table class="table table-hover table-bordered" id="incomes-list">
                 <thead>
                   <tr>
                     <th>Description</th>
@@ -35,16 +35,16 @@
                   </tr>
                 </tfoot>
               </table>
-              <form class="form-inline" id="credit-form">
+              <form class="form-inline" id="income-form">
                 <input class="span6" type="text" name="title" class="title" placeholder="Description" />
                 <input class="span3" type="text" name="value" class="value" placeholder="Amount" />
                 <input type="hidden" name="_entryid" class="entryid" value="" />
-                <button type="submit" class="btn">Add Credit</button>
+                <button type="submit" class="btn">Add Income</button>
               </form>
             </div><!-- /span5 -->
             <div class="span5">
-              <h5>Debit</h5>
-              <table class="table table-hover table-bordered" id="debits-list">
+              <h5>Expenses</h5>
+              <table class="table table-hover table-bordered" id="expenses-list">
                 <thead>
                   <tr>
                     <th>Description</th>
@@ -63,11 +63,11 @@
                   </tr>
                 </tfoot>
               </table>
-              <form class="form-inline" id="debit-form">
+              <form class="form-inline" id="expense-form">
                 <input class="span6" type="text" name="title" placeholder="Description" />
                 <input class="span3" type="text" name="value" placeholder="Amount" />
                 <input type="hidden" name="_entryid" class="entryid" value="" />
-                <button type="submit" class="btn">Add Debit</button>
+                <button type="submit" class="btn">Add Expense</button>
               </form>
             
             </div><!-- /span -->
