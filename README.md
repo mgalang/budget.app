@@ -1,2 +1,4 @@
 # Budget.app
-#### A budget simple application built with [Geddyjs]http://geddyjs.org and [Spinejs]http://spinejs.com for the front-end
+#### A budget simple application 
+
+Built using [Geddyjs](http://geddyjs.org) (a node.js framework) and [Spinejs](http://spinejs.com) for the front-end
